@@ -88,6 +88,10 @@ func main() {
 
 		splitted := strings.Split(string(line), "\n")
 
+		if len(splitted) > 3 {
+			splitted = splitted[len(splitted)-3:]
+		}
+
 		for _, message := range splitted {
 			re := regexp.MustCompile(`\[([0-9:]+)\](.*)`)
 
