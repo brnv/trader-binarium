@@ -133,9 +133,10 @@ func parseTraderBotMessage(message string) {
 	kind := kindOption[matches[4]]
 	logger.Infof("[NEW SIGNAL] '%s' '%s'", asset, kind)
 
-	waitBeforeBet(asset, kind)
+	prevID := ""
 	betAgainIfFailed := true
-	runBinarium(firstBetSum, asset, kind, betAgainIfFailed)
+	waitBeforeBet(asset, kind)
+	runBinarium(firstBetSum, asset, kind, betAgainIfFailed, prevID)
 }
 
 func convertStringToMinutes(time string) int {
