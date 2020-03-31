@@ -33,11 +33,11 @@ var (
 	staleMessageTimeoutSeconds = 2
 )
 
-const usage = `name
+const usage = `trader-binarium
 
 Usage:
-    name [options]
-    name -h | --help
+    trader-binarium [options]
+    trader-binarium -h | --help
 
 Options:
     --debug    Enable debug output.
