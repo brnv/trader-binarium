@@ -31,6 +31,7 @@ var (
 	history map[string]bool = make(map[string]bool)
 
 	staleMessageTimeoutSeconds = 2
+	simultaneousMessagesMax    = 3
 )
 
 const usage = `trader-binarium
@@ -87,9 +88,8 @@ func main() {
 		line, _, _ := buf.ReadLine()
 
 		splitted := strings.Split(string(line), "\n")
-
-		if len(splitted) > 3 {
-			splitted = splitted[len(splitted)-3:]
+		if len(splitted) > simultaneousMessagesMax {
+			splitted = splitted[len(splitted)-simultaneousMessagesMax:]
 		}
 
 		for _, message := range splitted {
