@@ -35,7 +35,7 @@ func runBinarium(
 	logger.Debug(string(out))
 	binariumLock.Unlock()
 	if err != nil {
-		logger.Errorf("%s error: '%s'", loggerPrefix, err.Error())
+		logger.Errorf("%s placing sum error: '%s'", loggerPrefix, err.Error())
 	}
 
 	transactionID := getTransactionID(string(out))
@@ -89,7 +89,7 @@ func checkTransaction(
 	logger.Debug(string(out))
 	binariumLock.Unlock()
 	if err != nil {
-		logger.Errorf("%s error: '%s'", loggerPrefix, err.Error())
+		logger.Errorf("%s check transaction error: '%s'", loggerPrefix, err.Error())
 		return
 	}
 
