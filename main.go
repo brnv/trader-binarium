@@ -32,6 +32,12 @@ var (
 
 	staleMessageTimeoutSeconds = 2
 	simultaneousMessagesMax    = 3
+
+	emojiHexCodeSuccess          = "e29c85"
+	emojiHexCodeFail             = "e29d8c"
+	emojiHexCodeSecondTrySuccess = "e28fb3e29c85"
+
+	results = make(map[string]int)
 )
 
 const usage = `trader-binarium
@@ -79,6 +85,11 @@ func main() {
 		}
 	}()
 
+	go func() {
+		time.Sleep(time.Second * 10)
+		logResults()
+	}()
+
 	stdout, _ := cmd.StdoutPipe()
 
 	cmd.Start()
@@ -103,6 +114,28 @@ func main() {
 		}
 
 	}
+}
+
+func refreshTradingResults(message string) {
+	hex := fmt.Sprintf("%x", message)
+
+	if strings.Contains(hex, emojiHexCodeSecondTrySuccess) {
+		results["zero"]++
+	} else if strings.Contains(hex, emojiHexCodeSuccess) {
+		results["success"]++
+	} else if strings.Contains(hex, emojiHexCodeFail) {
+		results["failure"]++
+	}
+}
+
+func logResults() {
+	logger.Infof(
+		"[STATISTICS] [TOTAL:%d] success: '%d', fail: '%d', zeros: '%d'",
+		results["success"]+results["failure"]+results["zero"],
+		results["success"],
+		results["failure"],
+		results["zero"],
+	)
 }
 
 func parseTraderBotMessage(message string) {
@@ -130,6 +163,7 @@ func parseTraderBotMessage(message string) {
 	currentMinutes := convertStringToMinutes(currentTime)
 
 	if Abs(currentMinutes-messageMinutes) > staleMessageTimeoutSeconds {
+		refreshTradingResults(message)
 		logger.Infof("[IGNORE SIGNAL] '%s'", message)
 		return
 	}
